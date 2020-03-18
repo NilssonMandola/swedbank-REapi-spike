@@ -2,6 +2,8 @@ package com.crankoid.reverseengineeringapi.resource.seb.login.internal;
 
 import com.crankoid.reverseengineeringapi.resource.seb.login.api.SebLoginResource;
 import com.crankoid.reverseengineeringapi.service.seb.SebClient;
+import com.crankoid.reverseengineeringapi.service.seb.model.InitResponse;
+import com.crankoid.reverseengineeringapi.service.seb.model.VerifyResponse;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
@@ -17,11 +19,11 @@ public class SebLoginResourceImpl implements SebLoginResource {
         this.sebClient = sebClient;
     }
 
-    public String start() throws IOException {
-        return sebClient.startAuthenticate();
+    public InitResponse init() throws IOException {
+        return sebClient.postAuthentications();
     }
 
-    public String poll() throws IOException {
+    public VerifyResponse verify() throws IOException {
         return sebClient.pollAuthenticate();
     }
 }
