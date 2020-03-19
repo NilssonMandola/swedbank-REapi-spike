@@ -7,7 +7,8 @@ import com.crankoid.reverseengineeringapi.service.seb.model.VerifyResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
@@ -16,21 +17,24 @@ import java.util.*;
 
 @Component
 public class SebClient {
-    private static final String COOKIE_NAME_PREFIX = "cookie_";
+    private static final Logger logger = LogManager.getLogger(SebClient.class);
+
     public static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
+    public static final String USER_AGENT = "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)";
 
     private HttpSession httpSession;
     private OkHttpClient okHttpClient;
     private ObjectMapper objectMapper;
 
-    public SebClient(HttpSession httpSession, ObjectMapper objectMapper) {
+    public SebClient(HttpSession httpSession, ObjectMapper objectMapper, CookieJar cookieJar) {
         this.httpSession = httpSession;
         this.objectMapper = objectMapper;
         this.okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
     }
 
     public InitResponse postAuthentications() throws IOException {
+        logger.debug("postAuthentications");
         RequestBody body = RequestBody.create("", null);
 
         Request request = new Request.Builder()
@@ -40,7 +44,7 @@ public class SebClient {
                 .addHeader("x-seb-uuid", UUID.randomUUID().toString())
                 .addHeader("Connection", "keep-alive")
                 .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)")
+                .addHeader("User-Agent", USER_AGENT)
                 .addHeader("Accept-Language", "sv-SE")
                 .post(body)
                 .build();
@@ -57,6 +61,7 @@ public class SebClient {
     }
 
     public VerifyResponse pollAuthenticate() throws IOException {
+        logger.debug("pollAuthenticate");
         Request request = new Request.Builder()
                 .url("https://mp.seb.se/auth/bid/v2/authentications")
                 .addHeader("Content-Type", "application/json;charset=UTF-8")
@@ -65,7 +70,7 @@ public class SebClient {
                 .addHeader("x-seb-csrf", (String)httpSession.getAttribute("x-seb-csrf"))
                 .addHeader("Connection", "keep-alive")
                 .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)")
+                .addHeader("User-Agent", USER_AGENT)
                 .addHeader("Accept-Language", "sv-SE")
                 .build();
 
@@ -96,7 +101,7 @@ public class SebClient {
                 .addHeader("x-seb-uuid", UUID.randomUUID().toString())
                 .addHeader("Connection", "keep-alive")
                 .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)")
+                .addHeader("User-Agent", USER_AGENT)
                 .addHeader("Accept-Language", "sv-SE")
                 .addHeader("x-iam-version", "3")
                 .post(body)
@@ -139,7 +144,7 @@ public class SebClient {
                 .addHeader("x-seb-uuid", UUID.randomUUID().toString())
                 .addHeader("Connection", "keep-alive")
                 .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)")
+                .addHeader("User-Agent", USER_AGENT)
                 .addHeader("Accept-Language", "sv-SE")
                 .addHeader("x-iam-version", "3")
                 .post(body)
@@ -180,7 +185,7 @@ public class SebClient {
                 .addHeader("x-seb-uuid", UUID.randomUUID().toString())
                 .addHeader("Connection", "keep-alive")
                 .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)")
+                .addHeader("User-Agent", USER_AGENT)
                 .addHeader("Accept-Language", "sv-SE")
                 .addHeader("x-iam-version", "3")
                 .post(body)
@@ -199,33 +204,4 @@ public class SebClient {
         }
 
     }
-
-
-    CookieJar cookieJar = new CookieJar() {
-        @Override
-        public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
-            for (Cookie cookie : list) {
-                httpSession.setAttribute(COOKIE_NAME_PREFIX + cookie.name(), new SerializableCookie(cookie));
-            }
-        }
-
-        @NotNull
-        @Override
-        public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
-            Enumeration<String> names = httpSession.getAttributeNames();
-
-            List<Cookie> cookies = new ArrayList<>();
-
-            while (names.hasMoreElements()) {
-               String name = names.nextElement();
-               if (name.startsWith(COOKIE_NAME_PREFIX)) {
-                   SerializableCookie serializableCookie = (SerializableCookie)httpSession.getAttribute(name);
-                   Cookie cookie = serializableCookie.getCookie();
-                   cookies.add(cookie);
-               }
-            }
-
-            return cookies;
-        }
-    };
 }

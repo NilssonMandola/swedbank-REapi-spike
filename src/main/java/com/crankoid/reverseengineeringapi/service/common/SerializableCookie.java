@@ -1,4 +1,4 @@
-package com.crankoid.reverseengineeringapi.service.seb;
+package com.crankoid.reverseengineeringapi.service.common;
 
 import okhttp3.Cookie;
 
