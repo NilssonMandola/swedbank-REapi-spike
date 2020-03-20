@@ -4,7 +4,7 @@ import com.crankoid.reverseengineeringapi.resource.login.api.LoginResource;
 import com.crankoid.reverseengineeringapi.resource.login.api.dto.LoginRequestDTO;
 import com.crankoid.reverseengineeringapi.resource.login.api.dto.LoginResponseDTO;
 import com.crankoid.reverseengineeringapi.resource.login.internal.converter.LoginResponseDTOConverter;
-import com.crankoid.reverseengineeringapi.service.api.LoginService;
+import com.crankoid.reverseengineeringapi.service.login.api.LoginService;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

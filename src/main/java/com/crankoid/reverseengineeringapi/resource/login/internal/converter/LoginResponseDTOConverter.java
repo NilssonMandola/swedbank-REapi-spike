@@ -1,7 +1,7 @@
 package com.crankoid.reverseengineeringapi.resource.login.internal.converter;
 
 import com.crankoid.reverseengineeringapi.resource.login.api.dto.LoginResponseDTO;
-import com.crankoid.reverseengineeringapi.service.api.model.LoginResponse;
+import com.crankoid.reverseengineeringapi.service.login.api.model.LoginResponse;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

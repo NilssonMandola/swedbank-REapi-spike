@@ -1,9 +1,9 @@
-package com.crankoid.reverseengineeringapi.service.internal.seb.internal.client;
+package com.crankoid.reverseengineeringapi.service.internal.seb.client;
 
-import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.Account;
-import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.AccountsResponse;
-import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.InitResponse;
-import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.VerifyResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.Account;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.AccountsResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.InitResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.VerifyResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;

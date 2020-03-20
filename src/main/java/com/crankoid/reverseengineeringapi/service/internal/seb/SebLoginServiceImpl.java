@@ -1,16 +1,16 @@
-package com.crankoid.reverseengineeringapi.service.internal.seb.internal;
+package com.crankoid.reverseengineeringapi.service.internal.seb;
 
-import com.crankoid.reverseengineeringapi.service.api.model.LoginResponse;
-import com.crankoid.reverseengineeringapi.service.internal.seb.api.SebLoginService;
-import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.SebClient;
-import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.InitResponse;
-import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.VerifyResponse;
+import com.crankoid.reverseengineeringapi.service.login.api.model.LoginResponse;
+import com.crankoid.reverseengineeringapi.service.login.internal.ExternalLoginService;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.SebClient;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.InitResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.VerifyResponse;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Service
-public class SebLoginServiceImpl implements SebLoginService {
+@Service("ESSESESS")
+public class SebLoginServiceImpl implements ExternalLoginService {
     private SebClient sebClient;
 
     public SebLoginServiceImpl(SebClient sebClient) {
@@ -18,7 +18,7 @@ public class SebLoginServiceImpl implements SebLoginService {
     }
 
     @Override
-    public LoginResponse login(String bic, String ssn) {
+    public LoginResponse login(String ssn) {
         LoginResponse loginResponse = new LoginResponse();
 
         try {
@@ -33,7 +33,7 @@ public class SebLoginServiceImpl implements SebLoginService {
     }
 
     @Override
-    public LoginResponse poll(String bic) {
+    public LoginResponse poll() {
         LoginResponse loginResponse = new LoginResponse();
 
         try {

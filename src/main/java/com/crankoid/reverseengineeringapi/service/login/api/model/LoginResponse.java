@@ -1,4 +1,4 @@
-package com.crankoid.reverseengineeringapi.service.api.model;
+package com.crankoid.reverseengineeringapi.service.login.api.model;
 
 public class LoginResponse {
     public enum Status {
