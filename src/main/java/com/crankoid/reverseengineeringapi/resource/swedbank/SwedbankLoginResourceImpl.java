@@ -1,4 +1,4 @@
-package com.crankoid.reverseengineeringapi.resource.login.swedbank.internal;
+package com.crankoid.reverseengineeringapi.resource.swedbank;
 
 import org.apache.http.Header;
 import org.apache.http.HttpRequest;
@@ -22,7 +22,7 @@ import java.io.InputStreamReader;
 
 @RequestMapping("swedbank")
 @RestController
-public class LoginResourceImpl {
+public class SwedbankLoginResourceImpl {
 
     private String jsessionid;
     private String swbtc;

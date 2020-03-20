@@ -1,4 +1,4 @@
-package com.crankoid.reverseengineeringapi.service.seb.model;
+package com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model;
 
 public class InitResponse {
     private String auto_start_token;

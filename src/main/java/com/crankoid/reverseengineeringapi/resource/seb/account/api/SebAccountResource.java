@@ -1,6 +1,6 @@
 package com.crankoid.reverseengineeringapi.resource.seb.account.api;
 
-import com.crankoid.reverseengineeringapi.service.seb.model.AccountsResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.AccountsResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 

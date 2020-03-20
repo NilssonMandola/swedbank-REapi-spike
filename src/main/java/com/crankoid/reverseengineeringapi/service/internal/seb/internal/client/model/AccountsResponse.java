@@ -1,4 +1,4 @@
-package com.crankoid.reverseengineeringapi.service.seb.model;
+package com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model;
 
 import java.util.List;
 

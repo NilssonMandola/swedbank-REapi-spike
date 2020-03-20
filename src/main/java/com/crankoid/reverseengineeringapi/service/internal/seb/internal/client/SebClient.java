@@ -1,9 +1,9 @@
-package com.crankoid.reverseengineeringapi.service.seb;
+package com.crankoid.reverseengineeringapi.service.internal.seb.internal.client;
 
-import com.crankoid.reverseengineeringapi.service.seb.model.Account;
-import com.crankoid.reverseengineeringapi.service.seb.model.AccountsResponse;
-import com.crankoid.reverseengineeringapi.service.seb.model.InitResponse;
-import com.crankoid.reverseengineeringapi.service.seb.model.VerifyResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.Account;
+import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.AccountsResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.InitResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.internal.client.model.VerifyResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class SebClient {
@@ -30,7 +31,11 @@ public class SebClient {
     public SebClient(HttpSession httpSession, ObjectMapper objectMapper, CookieJar cookieJar) {
         this.httpSession = httpSession;
         this.objectMapper = objectMapper;
-        this.okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+        this.okHttpClient = new OkHttpClient.Builder()
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .cookieJar(cookieJar).build();
     }
 
     public InitResponse postAuthentications() throws IOException {
@@ -81,6 +86,7 @@ public class SebClient {
     }
 
     private boolean initSession() throws IOException {
+        logger.debug("initSession");
         String json = "{\n" +
                 "\t\"request\": {\n" +
                 "\t\t\"UserCredentials\": {\n" +
@@ -113,6 +119,7 @@ public class SebClient {
     }
 
     private VerifyResponse activateSession() throws IOException {
+        logger.debug("activateSession");
         String json ="{\n" +
                 "\t\"request\": {\n" +
                 "\t\t\"VODB\": {\n" +
@@ -161,6 +168,8 @@ public class SebClient {
     }
 
     public AccountsResponse getAccounts() throws IOException {
+        logger.debug("getAccounts");
+
         String json = String.format("{\n" +
                 "\t\"request\": {\n" +
                 "\t\t\"__type\": \"SEB_CS.SEBCSService\",\n" +
@@ -202,6 +211,5 @@ public class SebClient {
 
             return accountsResponse;
         }
-
     }
 }
