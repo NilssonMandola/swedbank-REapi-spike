@@ -26,9 +26,7 @@ public class LoginResourceImpl implements LoginResource {
     }
 
     @Override
-    public LoginResponseDTO poll(LoginRequestDTO loginRequest) {
-        String bic = loginRequest.getBic();
-
+    public LoginResponseDTO poll(String bic) {
         return converter.convert(loginService.poll(bic));
     }
 }

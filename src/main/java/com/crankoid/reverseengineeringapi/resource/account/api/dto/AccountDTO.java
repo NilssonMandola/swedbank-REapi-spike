@@ -1,6 +1,6 @@
-package com.crankoid.reverseengineeringapi.service.account.api.model;
+package com.crankoid.reverseengineeringapi.resource.account.api.dto;
 
-public class Account {
+public class AccountDTO {
     private String accountNumber;
     private String accountName;
     private Double accountBalance;

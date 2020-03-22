@@ -2,7 +2,7 @@ package com.crankoid.reverseengineeringapi.service.internal.seb.client.model;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 
-public class Account {
+public class SebAccount {
     private Integer rowId;
     private Long kundNrPersorg;
     private String kontoNr;

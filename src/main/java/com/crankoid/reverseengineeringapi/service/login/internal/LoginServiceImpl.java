@@ -14,11 +14,11 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public LoginResponse login(String bic, String ssn) {
-        return registry.getService(bic).login(ssn);
+        return registry.getService(bic + "/LOGIN").login(ssn);
     }
 
     @Override
     public LoginResponse poll(String bic) {
-        return registry.getService(bic).poll();
+        return registry.getService(bic + "/LOGIN").poll();
     }
 }

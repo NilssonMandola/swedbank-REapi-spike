@@ -1,7 +1,6 @@
 package com.crankoid.reverseengineeringapi.service.internal.seb.client;
 
-import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.Account;
-import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.AccountsResponse;
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.SebAccount;
 import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.InitResponse;
 import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.VerifyResponse;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -167,7 +166,7 @@ public class SebClient {
         }
     }
 
-    public AccountsResponse getAccounts() throws IOException {
+    public List<SebAccount> getAccounts() throws IOException {
         logger.debug("getAccounts");
 
         String json = String.format("{\n" +
@@ -204,12 +203,7 @@ public class SebClient {
             JsonNode obj = objectMapper.readTree(response.body().string());
             JsonNode pcbw4211 = obj.get("d").get("VODB").get("PCBW4211");
 
-            List<Account> accounts = Arrays.asList(objectMapper.convertValue(pcbw4211, Account[].class));
-
-            AccountsResponse accountsResponse = new AccountsResponse();
-            accountsResponse.setAccounts(accounts);
-
-            return accountsResponse;
+            return Arrays.asList(objectMapper.convertValue(pcbw4211, SebAccount[].class));
         }
     }
 }

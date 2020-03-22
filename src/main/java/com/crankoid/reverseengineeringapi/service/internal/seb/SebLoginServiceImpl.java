@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
-@Service("ESSESESS")
+@Service("ESSESESS/LOGIN")
 public class SebLoginServiceImpl implements ExternalLoginService {
     private SebClient sebClient;
 
