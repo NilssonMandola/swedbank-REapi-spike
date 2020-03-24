@@ -4,6 +4,9 @@ import com.crankoid.reverseengineeringapi.service.internal.swedbank.client.Swedb
 import com.crankoid.reverseengineeringapi.service.login.api.model.LoginResponse;
 import com.crankoid.reverseengineeringapi.service.login.internal.ExternalLoginService;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
+
+import java.io.IOException;
 
 @Service("SWEDSESS/LOGIN")
 public class SwedbankLoginServiceImpl  implements ExternalLoginService {
@@ -16,10 +19,13 @@ public class SwedbankLoginServiceImpl  implements ExternalLoginService {
     @Override
     public LoginResponse login(String ssn) {
         LoginResponse loginResponse = new LoginResponse();
-        
-        swedbankClient.sendLoginRequest(ssn);
 
-        loginResponse.setStatus(LoginResponse.Status.PENDING);
+        try {
+            swedbankClient.sendLoginRequest(ssn);
+            loginResponse.setStatus(LoginResponse.Status.PENDING);
+        } catch (IOException e) {
+            loginResponse.setStatus(LoginResponse.Status.ERROR);
+        }
 
         return loginResponse;
     }
@@ -28,9 +34,12 @@ public class SwedbankLoginServiceImpl  implements ExternalLoginService {
     public LoginResponse poll() {
         LoginResponse loginResponse = new LoginResponse();
 
-        swedbankClient.verifyLoginRequest();
-
-        loginResponse.setStatus(LoginResponse.Status.OK);
+        try {
+            swedbankClient.verifyLoginRequest();
+            loginResponse.setStatus(LoginResponse.Status.OK);
+        } catch (IOException e) {
+            loginResponse.setStatus(LoginResponse.Status.ERROR);
+        }
 
         return loginResponse;
     }

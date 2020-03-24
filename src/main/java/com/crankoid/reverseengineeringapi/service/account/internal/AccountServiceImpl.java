@@ -8,14 +8,14 @@ import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-    private ExternalAccountServiceRegistry registry;
+    private ExternalAccountServiceFactory factory;
 
-    public AccountServiceImpl(ExternalAccountServiceRegistry registry) {
-        this.registry = registry;
+    public AccountServiceImpl(ExternalAccountServiceFactory factory) {
+        this.factory = factory;
     }
 
     @Override
     public List<Account> getAccounts(String bic) {
-        return registry.getService(bic + "/ACCOUNT").getAccounts();
+        return factory.getExternalAccountService(bic + "/ACCOUNT").getAccounts();
     }
 }

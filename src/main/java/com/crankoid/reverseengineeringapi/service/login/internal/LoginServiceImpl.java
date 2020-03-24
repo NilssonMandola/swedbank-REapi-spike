@@ -6,19 +6,19 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LoginServiceImpl implements LoginService {
-    private ExternalLoginServiceRegistry registry;
+    private ExternalLoginServiceFactory factory;
 
-    public LoginServiceImpl(ExternalLoginServiceRegistry registry) {
-        this.registry = registry;
+    public LoginServiceImpl(ExternalLoginServiceFactory factory) {
+        this.factory = factory;
     }
 
     @Override
     public LoginResponse login(String bic, String ssn) {
-        return registry.getService(bic + "/LOGIN").login(ssn);
+        return factory.getExternalLoginService(bic + "/LOGIN").login(ssn);
     }
 
     @Override
     public LoginResponse poll(String bic) {
-        return registry.getService(bic + "/LOGIN").poll();
+        return factory.getExternalLoginService(bic + "/LOGIN").poll();
     }
 }

@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ExternalLoginServiceConfig {
-    @Bean
-    public FactoryBean<?> getLoginService() {
+    @Bean("externalLoginServiceFactory")
+    public FactoryBean<?> getBean() {
         ServiceLocatorFactoryBean bean = new ServiceLocatorFactoryBean();
-        bean.setServiceLocatorInterface(ExternalLoginServiceRegistry.class);
+        bean.setServiceLocatorInterface(ExternalLoginServiceFactory.class);
         return bean;
     }
 }

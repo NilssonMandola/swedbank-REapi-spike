@@ -41,24 +41,22 @@ public class SebClient {
         logger.debug("postAuthentications");
         RequestBody body = RequestBody.create("", null);
 
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url("https://mp.seb.se/auth/bid/v2/authentications")
-                .addHeader("Content-Type", "application/json;charset=UTF-8")
-                .addHeader("SEBLanguage", "sv-SE")
-                .addHeader("x-seb-uuid", UUID.randomUUID().toString())
-                .addHeader("Connection", "keep-alive")
-                .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", USER_AGENT)
-                .addHeader("Accept-Language", "sv-SE")
-                .post(body)
-                .build();
+                .post(body);
+
+        setCommonHeaders(builder);
+        Request request = builder.build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
+            String responseBody = response.body().string();
+            logger.debug(responseBody);
+
             String header = response.header("x-seb-csrf");
             httpSession.setAttribute("x-seb-csrf", header);
 
             InitResponse initResponse =
-                    objectMapper.readValue(response.body().string(), InitResponse.class);
+                    objectMapper.readValue(responseBody, InitResponse.class);
 
             return initResponse;
         }
@@ -66,21 +64,21 @@ public class SebClient {
 
     public VerifyResponse pollAuthenticate() throws IOException {
         logger.debug("pollAuthenticate");
-        Request request = new Request.Builder()
+
+        Request.Builder builder = new Request.Builder()
                 .url("https://mp.seb.se/auth/bid/v2/authentications")
-                .addHeader("Content-Type", "application/json;charset=UTF-8")
-                .addHeader("SEBLanguage", "sv-SE")
-                .addHeader("x-seb-uuid", UUID.randomUUID().toString())
-                .addHeader("x-seb-csrf", (String)httpSession.getAttribute("x-seb-csrf"))
-                .addHeader("Connection", "keep-alive")
-                .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", USER_AGENT)
-                .addHeader("Accept-Language", "sv-SE")
-                .build();
+                .addHeader("x-seb-csrf", (String)httpSession.getAttribute("x-seb-csrf"));
+
+        setCommonHeaders(builder);
+        Request request = builder.build();
+
 
         try (Response response = okHttpClient.newCall(request).execute()) {
-               initSession();
-               return activateSession();
+            String responseBody = response.body().string();
+            logger.debug(responseBody);
+
+            initSession();
+            return activateSession();
         }
     }
 
@@ -99,20 +97,18 @@ public class SebClient {
 
         RequestBody body = RequestBody.create(json, JSON);
 
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url("https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankInit11Session01.asmx/Execute")
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .addHeader("SEBLanguage", "sv-SE")
-                .addHeader("x-seb-uuid", UUID.randomUUID().toString())
-                .addHeader("Connection", "keep-alive")
-                .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", USER_AGENT)
-                .addHeader("Accept-Language", "sv-SE")
                 .addHeader("x-iam-version", "3")
-                .post(body)
-                .build();
+                .post(body);
+
+        setCommonHeaders(builder);
+        Request request = builder.build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
+            String responseBody = response.body().string();
+            logger.debug(responseBody);
+
             return response.code() == 200;
         }
     }
@@ -143,21 +139,19 @@ public class SebClient {
 
         RequestBody body = RequestBody.create(json, JSON);
 
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url("https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankAktivera01Session01.asmx/Execute")
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .addHeader("SEBLanguage", "sv-SE")
-                .addHeader("x-seb-uuid", UUID.randomUUID().toString())
-                .addHeader("Connection", "keep-alive")
-                .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", USER_AGENT)
-                .addHeader("Accept-Language", "sv-SE")
                 .addHeader("x-iam-version", "3")
-                .post(body)
-                .build();
+                .post(body);
+
+        setCommonHeaders(builder);
+        Request request = builder.build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
-            JsonNode obj = objectMapper.readTree(response.body().string());
+            String responseBody = response.body().string();
+            logger.debug(responseBody);
+
+            JsonNode obj = objectMapper.readTree(responseBody);
             JsonNode userinf01 = obj.get("d").get("VODB").get("USRINF01");
 
             VerifyResponse verifyResponse = objectMapper.convertValue(userinf01, VerifyResponse.class);
@@ -186,24 +180,32 @@ public class SebClient {
 
         RequestBody body = RequestBody.create(json, JSON);
 
-        Request request = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url("https://mp.seb.se/1000/ServiceFactory/PC_BANK/PC_BankLista01Konton_privat01.asmx/Execute")
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .addHeader("SEBLanguage", "sv-SE")
-                .addHeader("x-seb-uuid", UUID.randomUUID().toString())
-                .addHeader("Connection", "keep-alive")
-                .addHeader("Accept", "application/json")
-                .addHeader("User-Agent", USER_AGENT)
-                .addHeader("Accept-Language", "sv-SE")
                 .addHeader("x-iam-version", "3")
-                .post(body)
-                .build();
+                .post(body);
+
+        setCommonHeaders(builder);
+        Request request = builder.build();
 
         try (Response response = okHttpClient.newCall(request).execute()) {
-            JsonNode obj = objectMapper.readTree(response.body().string());
+            String responseBody = response.body().string();
+            logger.debug(responseBody);
+
+            JsonNode obj = objectMapper.readTree(responseBody);
             JsonNode pcbw4211 = obj.get("d").get("VODB").get("PCBW4211");
 
             return Arrays.asList(objectMapper.convertValue(pcbw4211, SebAccount[].class));
         }
+    }
+
+    private void setCommonHeaders(Request.Builder builder) {
+        builder.addHeader("Content-Type", "application/json; charset=utf-8")
+            .addHeader("SEBLanguage", "sv-SE")
+            .addHeader("x-seb-uuid", UUID.randomUUID().toString())
+            .addHeader("Connection", "keep-alive")
+            .addHeader("Accept", "application/json")
+            .addHeader("User-Agent", USER_AGENT)
+            .addHeader("Accept-Language", "sv-SE");
     }
 }

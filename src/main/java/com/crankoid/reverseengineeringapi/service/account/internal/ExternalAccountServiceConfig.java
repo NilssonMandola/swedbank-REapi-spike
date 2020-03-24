@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ExternalAccountServiceConfig {
-    @Bean
-    public FactoryBean<?> getAccountService() {
+    @Bean("externalAccountServiceFactory")
+    public FactoryBean<?> getBean() {
         ServiceLocatorFactoryBean bean = new ServiceLocatorFactoryBean();
-        bean.setServiceLocatorInterface(ExternalAccountServiceRegistry.class);
+        bean.setServiceLocatorInterface(ExternalAccountServiceFactory.class);
         return bean;
     }
 }
