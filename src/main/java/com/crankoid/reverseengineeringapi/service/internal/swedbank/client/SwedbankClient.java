@@ -1,20 +1,16 @@
 package com.crankoid.reverseengineeringapi.service.internal.swedbank.client;
 
-import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.SebAccount;
 import com.crankoid.reverseengineeringapi.service.internal.swedbank.client.model.SwedbankHolding;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
