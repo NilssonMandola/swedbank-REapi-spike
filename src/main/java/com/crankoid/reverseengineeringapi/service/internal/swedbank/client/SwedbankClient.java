@@ -1,5 +1,7 @@
 package com.crankoid.reverseengineeringapi.service.internal.swedbank.client;
 
+import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.SebAccount;
+import com.crankoid.reverseengineeringapi.service.internal.swedbank.client.model.SwedbankHolding;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
@@ -124,6 +129,27 @@ public class SwedbankClient {
             logger.debug(responseBody);
 
             return response.code() == 200;
+        }
+    }
+
+    public List<SwedbankHolding> getHoldings() throws IOException {
+        logger.debug("getHoldings");
+
+        String dsid = "BB7293C50244F95F:O8PQBMxkxLuRh5JD4YzjAyYuY6E=";
+
+        Request.Builder builder = new Request.Builder()
+                .url(String.format("https://online.swedbank.se/TDE_DAP_Portal_REST_WEB/api/v5/portfolio/holdings?dsid=%s", dsid));
+
+        setCommonHeaders(builder);
+        Request request = builder.build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            String responseBody = response.body().string();
+            logger.debug(responseBody);
+
+            JsonNode obj = objectMapper.readTree(responseBody);
+            JsonNode investmentSavings = obj.get("investmentSavings");
+            return Arrays.asList(objectMapper.convertValue(investmentSavings, SwedbankHolding[].class));
         }
     }
 
