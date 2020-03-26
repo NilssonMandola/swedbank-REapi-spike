@@ -3,6 +3,7 @@ package com.crankoid.reverseengineeringapi.service.internal.swedbank.client;
 import com.crankoid.reverseengineeringapi.service.internal.swedbank.client.model.SwedbankHolding;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +19,9 @@ import java.util.concurrent.TimeUnit;
 public class SwedbankClient {
     private static final Logger logger = LogManager.getLogger(SwedbankClient.class);
 
-    public static final MediaType JSON
+    private static final String SWEDBANK = "swedbank";
+
+    private static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
 
     private HttpSession httpSession;
@@ -35,6 +38,7 @@ public class SwedbankClient {
                 .cookieJar(cookieJar).build();
     }
 
+    @CircuitBreaker(name = SWEDBANK)
     public boolean sendLoginRequest(String ssn) throws IOException {
         logger.debug("sendLoginRequest");
 
@@ -59,6 +63,7 @@ public class SwedbankClient {
 
     }
 
+    @CircuitBreaker(name = SWEDBANK)
     public boolean verifyLoginRequest() throws IOException {
         logger.debug("verifyLoginRequest");
 
@@ -81,6 +86,7 @@ public class SwedbankClient {
         }
     }
 
+    @CircuitBreaker(name = SWEDBANK)
     private boolean getAuthenticatedProfile() throws IOException {
         logger.debug("getAuthenticatedProfile");
 
@@ -105,6 +111,7 @@ public class SwedbankClient {
         }
     }
 
+    @CircuitBreaker(name = SWEDBANK)
     private boolean postAuthenticatedProfile() throws IOException {
         logger.debug("postAuthenticatedProfile");
 
@@ -128,6 +135,7 @@ public class SwedbankClient {
         }
     }
 
+    @CircuitBreaker(name = SWEDBANK)
     public List<SwedbankHolding> getHoldings() throws IOException {
         logger.debug("getHoldings");
 

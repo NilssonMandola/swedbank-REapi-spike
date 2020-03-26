@@ -1,0 +1,203 @@
+{
+	"info": {
+		"_postman_id": "9004a13b-fb03-4058-a5ed-23c2eb1b659b",
+		"name": "reverse-engineering-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Init",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b43f2263-578b-462c-b724-69863e9598c0",
+								"exec": [
+									"pm.test(\"Start authenticate\", function() {",
+									"    let jsonData = pm.response.json();",
+									"    pm.globals.set(\"auto_start_token\", jsonData.autoStartToken);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"bic\" : \"SWEDSESS\",\n  \"ssn\" : \"7804193931\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Generate QR-code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "https://chart.googleapis.com/chart?chs=220x220&cht=qr&chl=bankid:///?autostarttoken={{auto_start_token}}&choe=UTF-8",
+							"protocol": "https",
+							"host": [
+								"chart",
+								"googleapis",
+								"com"
+							],
+							"path": [
+								"chart"
+							],
+							"query": [
+								{
+									"key": "chs",
+									"value": "220x220"
+								},
+								{
+									"key": "cht",
+									"value": "qr"
+								},
+								{
+									"key": "chl",
+									"value": "bankid:///?autostarttoken={{auto_start_token}}"
+								},
+								{
+									"key": "choe",
+									"value": "UTF-8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/login/SWEDSESS",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"login",
+								"SWEDSESS"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Get accounts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/accounts/ESSESESS",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"accounts",
+								"ESSESESS"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Holdings",
+			"item": [
+				{
+					"name": "Get holdings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/holdings/SWEDSESS",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"holdings",
+								"SWEDSESS"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

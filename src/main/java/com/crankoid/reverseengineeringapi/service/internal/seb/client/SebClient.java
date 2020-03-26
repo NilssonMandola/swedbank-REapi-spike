@@ -5,6 +5,7 @@ import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.Init
 import com.crankoid.reverseengineeringapi.service.internal.seb.client.model.VerifyResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import okhttp3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,9 +20,10 @@ import java.util.concurrent.TimeUnit;
 public class SebClient {
     private static final Logger logger = LogManager.getLogger(SebClient.class);
 
-    public static final MediaType JSON
+    private static final String SEB = "seb";
+
+    private static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
-    public static final String USER_AGENT = "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)";
 
     private HttpSession httpSession;
     private OkHttpClient okHttpClient;
@@ -37,6 +39,7 @@ public class SebClient {
                 .cookieJar(cookieJar).build();
     }
 
+    @CircuitBreaker(name = SEB)
     public InitResponse postAuthentications() throws IOException {
         logger.debug("postAuthentications");
         RequestBody body = RequestBody.create("", null);
@@ -62,6 +65,7 @@ public class SebClient {
         }
     }
 
+    @CircuitBreaker(name = SEB)
     public VerifyResponse pollAuthenticate() throws IOException {
         logger.debug("pollAuthenticate");
 
@@ -82,6 +86,7 @@ public class SebClient {
         }
     }
 
+    @CircuitBreaker(name = SEB)
     private boolean initSession() throws IOException {
         logger.debug("initSession");
         String json = "{\n" +
@@ -113,6 +118,7 @@ public class SebClient {
         }
     }
 
+    @CircuitBreaker(name = SEB)
     private VerifyResponse activateSession() throws IOException {
         logger.debug("activateSession");
         String json ="{\n" +
@@ -160,6 +166,7 @@ public class SebClient {
         }
     }
 
+    @CircuitBreaker(name = SEB)
     public List<SebAccount> getAccounts() throws IOException {
         logger.debug("getAccounts");
 
@@ -205,7 +212,7 @@ public class SebClient {
             .addHeader("x-seb-uuid", UUID.randomUUID().toString())
             .addHeader("Connection", "keep-alive")
             .addHeader("Accept", "application/json")
-            .addHeader("User-Agent", USER_AGENT)
+            .addHeader("User-Agent", "SEBapp/1.0 (os=iOS/13.3; app=se.seb.privatkund/10.4)")
             .addHeader("Accept-Language", "sv-SE");
     }
 }

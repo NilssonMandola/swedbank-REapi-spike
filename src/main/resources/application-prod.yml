@@ -1,0 +1,18 @@
+spring:
+  session.store-type: jdbc
+  h2.console.enabled: true
+
+management.endpoints.web.exposure.include: '*'
+management.endpoint.health.show-details: always
+management.health.circuitbreakers.enabled: true
+
+resilience4j.circuitbreaker:
+    configs:
+        default:
+            slidingWindowSize: 10
+            registerHealthIndicator: true
+    instances:
+            seb:
+                baseConfig: default
+            swedbank:
+                baseConfig: default
